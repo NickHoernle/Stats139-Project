@@ -1,1 +1,3 @@
 # Stats139-Project
+[] - Milestone 1 - 22 November (Submit a 1-page (or slightly longer) project proposal, including the names ofyour group members, outline of the paper, explanation of what you have done so far, and what is left to do, and description of any challenges you have faced (for example, diﬃcultiesobtaining data). Submit this to Canvas by Tuesday, November 22.)
+[] - 7th December - Deadline
