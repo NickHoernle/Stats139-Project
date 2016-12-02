@@ -92,6 +92,10 @@ clean_data <- data.frame(
 # I think we will have a lot of good stuff here
 demographics <-messy_sheets$demographics_and_grades
 
+write.table(demographics, './data/clean_demographics.csv', sep = ',')
+write.table(clean_data, './data/clean_education_data.csv', sep = ',')
+
+
 
 
 
