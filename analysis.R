@@ -23,7 +23,6 @@ totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 
 df_without_state <- totalclean[,-1]
 
-
 #transform (decided no sqrt)
 hist(clean_data$per_pupil_expenditure)
 hist(log((clean_data$per_pupil_expenditure)))
@@ -60,6 +59,26 @@ hist(clean_data$FTE_teachers)
 
 
 
+
+
+model <- lm(total_score ~ ., data=df_without_state)
+summary(model)
+
+model2 <- lm(total_score ~ poverty_18_and_younger
+                            +FTE_teachers
+                            +american.indian.alaskan
+                            +asian.hawaiian.Native.Pacific.Islander.or.asian
+                            +black
+                            +student.support.services, data=totalclean)
+summary(model2)
+
+model3 <- lm(total_score ~ (poverty_18_and_younger
+             +FTE_teachers
+             +american.indian.alaskan
+             +asian.hawaiian.Native.Pacific.Islander.or.asian
+             +black
+             +student.support.services)^2, data=totalclean)
+summary(model3)
 # visulisations, variable transformations etc
 # Kimia you can start exploring here
 
