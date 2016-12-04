@@ -12,6 +12,10 @@ read_excel_allsheets <- function(filename) {
   names(x) <- sheets
   x
 }
+
+# helper to get the corect numeric from factors
+as.numeric.factor <- function(x) {as.numeric(gsub(",", "", as.character(x)))}
+
 # read all the messy sheets into a vector
 messy_sheets <- read_excel_allsheets("./data/project_data.xls")
 
@@ -85,7 +89,7 @@ gini_coef               <- as.numeric(messy_sheets$gini_coefficient_and_voucher$
 voucher                 <- messy_sheets$gini_coefficient_and_voucher$`voucher?`
 median_income           <- as.numeric(other_data$median_income)
 poverty_18_and_younger  <- as.numeric(other_data$poverty_18_and_younger)
-FTE_teachers            <- as.numeric(other_data$FTE_teachers)
+FTE_teachers            <- as.numeric.factor(other_data$FTE_teachers)
 
 voucher[voucher=='yes'] <- 1
 voucher[is.na(voucher)] <- 0
