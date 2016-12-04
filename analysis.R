@@ -22,6 +22,44 @@ totalclean <- merge(totalclean, demographics[,demo_cols], by.x='State', by.y='st
 totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 
 df_without_state <- totalclean[,-1]
+
+
+#transform (decided no sqrt)
+hist(clean_data$per_pupil_expenditure)
+hist(log((clean_data$per_pupil_expenditure)))
+clean_data$per_pupil_expenditure <- log((clean_data$per_pupil_expenditure))
+
+#transform
+hist(clean_data$employee_salaries)
+hist(log(clean_data$employee_salaries))
+clean_data$employee_salaries <- log(clean_data$employee_salaries)
+#transform
+hist(clean_data$total_support_services)
+hist(log(clean_data$total_support_services))
+clean_data$total_support_service <- log(clean_data$total_support_services)
+
+#tranny
+hist(clean_data$people_per_household)
+hist(log(clean_data$gini_coef))
+clean_data$gini_coef <- hist(log(clean_data$gini_coef))
+#tranny
+hist(clean_data$gini_coef)
+hist(log(clean_data$gini_coef))
+clean_data$gini_coef <- log(clean_data$gini_coef)
+
+
+hist(clean_data$poverty_18_and_younger)
+hist(sqrt(clean_data$poverty_18_and_younger))
+clean_data$poverty_18_and_younger <- sqrt(clean_data$poverty_18_and_younger)
+
+#DROP MEDIAN INCOME
+hist(clean_data$median_income)
+
+#DROP FTE
+hist(clean_data$FTE_teachers)
+
+
+
 # visulisations, variable transformations etc
 # Kimia you can start exploring here
 
