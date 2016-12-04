@@ -15,6 +15,8 @@ read_excel_allsheets <- function(filename) {
 # read all the messy sheets into a vector
 messy_sheets <- read_excel_allsheets("./data/project_data.xls")
 
+other_data <- read.csv('./data/clean_new_data.csv')
+
 # rename bad columns
 messy_sheets <- rename(messy_sheets, c(
   "Poverty and MedianIncome" ="poverty_and_median_income",
@@ -81,6 +83,9 @@ total_support_services  <- messy_sheets$more_per_pupil_expenditure$total_support
 people_per_household    <- messy_sheets$people_per_household$`People per Household`
 gini_coef               <- messy_sheets$gini_coefficient_and_voucher$`gini coefficient`
 voucher                 <- messy_sheets$gini_coefficient_and_voucher$`voucher?`
+median_income           <- other_data$median_income
+poverty_18_and_younger  <- other_data$poverty_18_and_younger
+FTE_teachers            <- other_data$FTE_teachers
 
 voucher[voucher=='yes'] <- 1
 voucher[is.na(voucher)] <- 0
@@ -92,6 +97,9 @@ clean_data <- data.frame(
   as.numeric(total_support_services),
   as.numeric(people_per_household),
   as.numeric(gini_coef),
+  as.numeric(median_income),
+  as.numeric(poverty_18_and_younger),
+  as.numeric(FTE_teachers),
   as.factor(voucher)
   )
 
@@ -102,12 +110,3 @@ demographics <-messy_sheets$demographics_and_grades
 
 write.table(demographics, './data/clean_demographics.csv', sep = ',')
 write.table(clean_data, './data/clean_education_data.csv', sep = ',')
-
-
-
-
-
-
-
-
-
