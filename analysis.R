@@ -51,11 +51,14 @@ hist(clean_data$poverty_18_and_younger)
 hist(sqrt(clean_data$poverty_18_and_younger))
 clean_data$poverty_18_and_younger <- sqrt(clean_data$poverty_18_and_younger)
 
+hist(clean_data$FTE_teachers)
+hist(log(clean_data$FTE_teachers))
+clean_data$FTE_teachers))<- log(clean_data$FTE_teachers)))
+
 #DROP MEDIAN INCOME
 hist(clean_data$median_income)
 
-#DROP FTE
-hist(clean_data$FTE_teachers)
+
 
 
 
