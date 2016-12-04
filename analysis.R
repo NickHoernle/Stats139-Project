@@ -1,11 +1,25 @@
 # read in the clean data
 demographics <- read.csv('./data/clean_demographics.csv')
+demo_cols <- c('state',
+               'american.indian.alaskan',
+               'asian.hawaiian.Native.Pacific.Islander.or.asian',
+               'hispanic',
+               'black',
+               'white',
+               'Total.number.of.students',
+               'high.school',
+               'student.support.services'
+               )
 edu_df <- read.csv('./data/clean_education_data.csv')
-NAEP <- read.csv('./data/clean_outcome_variable.csv')
+NAEP <- read.csv('./data/clean_outcome_variable2.csv')
 
-totalclean <- read.csv('./data/total_clean.csv')
+# drop the empty rows in NAEP
+NAEP <- NAEP[-c(52,53,54),]
+
+totalclean <- merge(NAEP[,c('State', 'total_score')], edu_df, by.x='State', by.y='state')
+totalclean <- merge(totalclean, demographics[,demo_cols], by.x='State', by.y='state')
 #drop DC- i dont think this even worked though
-totalclean<-totalclean[!(totalclean$state=="District of Columbia"), ]
+totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 
 # visulisations, variable transformations etc
 # Kimia you can start exploring here
@@ -19,7 +33,7 @@ pairs(demographics)
 
 ### 1
 
-
+#merge(NAEP, edu_df, by.x='State', by.y='state')
 #LMs
 #people per household is off x.1?
 #expendature per student too. 

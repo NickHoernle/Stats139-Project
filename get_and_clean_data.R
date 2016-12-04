@@ -46,7 +46,7 @@ messy_sheets$demographics_and_grades <- messy_sheets$demographics_and_grades[-c(
 colnames(messy_sheets$demographics_and_grades) <- c('state', colnames(messy_sheets$demographics_and_grades)[-1])
 
 colnames(messy_sheets$gini_coefficient_and_voucher) <- messy_sheets$gini_coefficient_and_voucher[1, ]
-messy_sheets$gini_coefficient_and_voucher <- messy_sheets$gini_coefficient_and_voucher[-c(1), ]
+messy_sheets$gini_coefficient_and_voucher <- messy_sheets$gini_coefficient_and_voucher[-c(1,53,54,55,56,57),c(1,2,3)]
 
 #######################################################################
 # run these commands to see what the data is about
@@ -79,12 +79,20 @@ per_pupil_expenditure   <- messy_sheets$more_per_pupil_expenditure$per_pupil_exp
 employee_salaries       <- messy_sheets$more_per_pupil_expenditure$employee_salaries[-c(52,53,54,55,56)]
 total_support_services  <- messy_sheets$more_per_pupil_expenditure$total_support_services[-c(52,53,54,55,56)]
 people_per_household    <- messy_sheets$people_per_household$`People per Household`
+gini_coef               <- messy_sheets$gini_coefficient_and_voucher$`gini coefficient`
+voucher                 <- messy_sheets$gini_coefficient_and_voucher$`voucher?`
+
+voucher[voucher=='yes'] <- 1
+voucher[is.na(voucher)] <- 0
+
 clean_data <- data.frame(
   state,
-  per_pupil_expenditure,
-  employee_salaries,
-  total_support_services,
-  people_per_household
+  as.numeric(per_pupil_expenditure),
+  as.numeric(employee_salaries),
+  as.numeric(total_support_services),
+  as.numeric(people_per_household),
+  as.numeric(gini_coef),
+  as.factor(voucher)
   )
 
 # this one is just a wealth of information, I didn't feel like copying all of the
