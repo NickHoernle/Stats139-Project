@@ -1,4 +1,4 @@
-"state","as.numeric.per_pupil_expenditure.","as.numeric.employee_salaries.","as.numeric.total_support_services.","as.numeric.people_per_household.","as.numeric.gini_coef.","as.numeric.median_income.","as.numeric.poverty_18_and_younger.","as.numeric.FTE_teachers.","as.factor.voucher."
+"state","per_pupil_expenditure","employee_salaries","total_support_services","people_per_household","gini_coef","median_income","poverty_18_and_younger","FTE_teachers","voucher"
 "1","Alabama",8666,2538696534,2337966723,2.48,0.471,5,24.6,46,"0"
 "2","Alaska",16228,605309764,821410645,2.86,0.402,48,12.3,39,"0"
 "3","Arizona",8203,3531455165,3390138381,2.84,0.451,28,23.3,31,"0"

@@ -21,6 +21,7 @@ totalclean <- merge(totalclean, demographics[,demo_cols], by.x='State', by.y='st
 #drop DC- i dont think this even worked though
 totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 
+df_without_state <- totalclean[,-1]
 # visulisations, variable transformations etc
 # Kimia you can start exploring here
 

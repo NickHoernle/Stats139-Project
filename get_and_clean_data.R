@@ -77,30 +77,31 @@ messy_sheets$gini_coefficient_and_voucher <- messy_sheets$gini_coefficient_and_v
 # Define all of the variables that we want to use in our project here.
 # Please make sure that the lengths etc are correct and the data are aligned
 state                   <- messy_sheets$more_per_pupil_expenditure$state[-c(52,53,54,55,56)]
-per_pupil_expenditure   <- messy_sheets$more_per_pupil_expenditure$per_pupil_expenditure[-c(52,53,54,55,56)]
-employee_salaries       <- messy_sheets$more_per_pupil_expenditure$employee_salaries[-c(52,53,54,55,56)]
-total_support_services  <- messy_sheets$more_per_pupil_expenditure$total_support_services[-c(52,53,54,55,56)]
-people_per_household    <- messy_sheets$people_per_household$`People per Household`
-gini_coef               <- messy_sheets$gini_coefficient_and_voucher$`gini coefficient`
+per_pupil_expenditure   <- as.numeric(messy_sheets$more_per_pupil_expenditure$per_pupil_expenditure[-c(52,53,54,55,56)])
+employee_salaries       <- as.numeric(messy_sheets$more_per_pupil_expenditure$employee_salaries[-c(52,53,54,55,56)])
+total_support_services  <- as.numeric(messy_sheets$more_per_pupil_expenditure$total_support_services[-c(52,53,54,55,56)])
+people_per_household    <- as.numeric(messy_sheets$people_per_household$`People per Household`)
+gini_coef               <- as.numeric(messy_sheets$gini_coefficient_and_voucher$`gini coefficient`)
 voucher                 <- messy_sheets$gini_coefficient_and_voucher$`voucher?`
-median_income           <- other_data$median_income
-poverty_18_and_younger  <- other_data$poverty_18_and_younger
-FTE_teachers            <- other_data$FTE_teachers
+median_income           <- as.numeric(other_data$median_income)
+poverty_18_and_younger  <- as.numeric(other_data$poverty_18_and_younger)
+FTE_teachers            <- as.numeric(other_data$FTE_teachers)
 
 voucher[voucher=='yes'] <- 1
 voucher[is.na(voucher)] <- 0
+voucher                 <- as.factor(voucher)
 
 clean_data <- data.frame(
   state,
-  as.numeric(per_pupil_expenditure),
-  as.numeric(employee_salaries),
-  as.numeric(total_support_services),
-  as.numeric(people_per_household),
-  as.numeric(gini_coef),
-  as.numeric(median_income),
-  as.numeric(poverty_18_and_younger),
-  as.numeric(FTE_teachers),
-  as.factor(voucher)
+  per_pupil_expenditure,
+  employee_salaries,
+  total_support_services,
+  people_per_household,
+  gini_coef,
+  median_income,
+  poverty_18_and_younger,
+  FTE_teachers,
+  voucher
   )
 
 # this one is just a wealth of information, I didn't feel like copying all of the
