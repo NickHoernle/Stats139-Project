@@ -39,8 +39,8 @@ clean_data$total_support_service <- log(clean_data$total_support_services)
 
 #tranny
 hist(clean_data$people_per_household)
-hist(log(clean_data$gini_coef))
-clean_data$gini_coef <- hist(log(clean_data$gini_coef))
+hist(log(clean_data$people_per_household))
+clean_data$gini_coef <- hist(log(clean_data$people_per_household))
 #tranny
 hist(clean_data$gini_coef)
 hist(log(clean_data$gini_coef))
@@ -53,7 +53,7 @@ clean_data$poverty_18_and_younger <- sqrt(clean_data$poverty_18_and_younger)
 
 hist(clean_data$FTE_teachers)
 hist(log(clean_data$FTE_teachers))
-clean_data$FTE_teachers))<- log(clean_data$FTE_teachers)))
+clean_data$FTE_teachers<- log(clean_data$FTE_teachers)
 
 #DROP MEDIAN INCOME
 hist(clean_data$median_income)
@@ -75,6 +75,7 @@ model2 <- lm(total_score ~ poverty_18_and_younger
                             +student.support.services, data=totalclean)
 summary(model2)
 
+#interaction model
 model3 <- lm(total_score ~ (poverty_18_and_younger
              +FTE_teachers
              +american.indian.alaskan
@@ -82,61 +83,52 @@ model3 <- lm(total_score ~ (poverty_18_and_younger
              +black
              +student.support.services)^2, data=totalclean)
 summary(model3)
-# visulisations, variable transformations etc
-# Kimia you can start exploring here
 
-#ASSUMPTIONS:
-#Linearity
-pairs(demographics)
-
-#observations:
-### 1 per pupil exp v employee salaries: have far tail outliers worth looking into
-
-### 1
-
-#merge(NAEP, edu_df, by.x='State', by.y='state')
-#LMs
-#people per household is off x.1?
-#expendature per student too. 
-
-#outcome variable is mean score of reading + math
-model1<-lm(totalclean$mean_avrg ~ totalclean$employee_salaries + totalclean$total_support_services + totalclean$studentsupportserv + totalclean$total_students)
-summary(model1)
-#nothing is signif 
-
-#outcome variable is standarized mean score of reading + math
-model2<-lm(totalclean$mean_st ~ totalclean$employee_salaries + totalclean$total_support_services + totalclean$studentsupportserv + totalclean$total_students)
-
-summary(model2)
-#total support services is significant, with + coefficient 
-
-## look at as many as possible
-labels(totalclean)
-model1all<-lm(totalclean$mean_avrg ~ (totalclean$employee_salaries + totalclean$total_support_services + totalclean$studentsupportserv + totalclean$total_students + totalclean$X2_more_races + totalclean$black + totalclean$hispanic + totalclean$indig + totalclean$azn + totalclean$white)^2)
-
-model2all<-lm(totalclean$mean_st ~ (totalclean$employee_salaries + totalclean$total_support_services + totalclean$studentsupportserv + totalclean$total_students + totalclean$X2_more_races + totalclean$black + totalclean$hispanic + totalclean$indig + totalclean$azn + totalclean$white).^2)
-
-summary(model1all)
-#
-
-summary(model2all)
-#
-
-model2<-lm(totalclean$mean_avrg ~
-
-#AIC Model
-step_forward = step(model0, scope=list(upper=model1), direction="forward")
-summary(step_forward)
-extractAIC(step_forward)
 
 #AIC BIC below
-#model 1 (Mean of scores)
-AICmodel1<-step(model1all,totalclean,direction='both')
+#model 1 ((total model))
+AICmodel1<-step(model,df_without_state,direction='backward')
+#################   AIC=209.72    #################
+#white, hisp, total # students, student support services, 
+## Per pupil exp, am indian, black, employee salary, asian, people per house, 
+#poverty 18
 
-BICmodel1<-step(model1all,totalclean,direction='both',k=log(nrow(totalclean)))
+##NOT INCLUDED median income
 
-#model 2 standard mean scores
-AICmodel2<-step(model2all,totalclean,,direction='both')
+AICmodel2<-step(model,df_without_state,direction='both')
+#also 209.72
+AICmodel2<-step(model,df_without_state,direction='forward')
+#220- worse
+###########################################################
 
-BICmodel2<-step(model2all,totalclean,direction='both',k=log(nrow(totalclean)))
-#AIC tends to fit larger models than BIC (penalty term grows with n)
+
+
+BICmodel1<-step(model,df_without_state,direction='both',k=log(nrow(df_without_state)))
+######### #BIC "Step:  AIC=220.84"  ################
+#black, Per pupil exp, people per house, employee salaries, asian, poverty
+
+#NOT INCLUDED
+#white, hisp, total # students, student support services, 
+#am indian, black, poverty 18
+
+#question for Iav- 
+#what does it mean to have sign or not sign, 
+#and then have these be in the model or not
+
+
+BICmodel1<-step(model,df_without_state,direction='forward',k=log(nrow(df_without_state)))
+#254- worse
+
+BICmodel1<-step(model,df_without_state,direction='backward',k=log(nrow(df_without_state)))
+#220.84
+
+
+
+
+
+
+
+
+
+
+
