@@ -58,12 +58,6 @@ clean_data$FTE_teachers<- log(clean_data$FTE_teachers)
 #DROP MEDIAN INCOME
 hist(clean_data$median_income)
 
-
-
-
-
-
-
 model <- lm(total_score ~ ., data=df_without_state)
 summary(model)
 
@@ -122,9 +116,38 @@ BICmodel1<-step(model,df_without_state,direction='forward',k=log(nrow(df_without
 BICmodel1<-step(model,df_without_state,direction='backward',k=log(nrow(df_without_state)))
 #220.84
 
+library(lars)
+x <- model.matrix(model3)
+y <- df_without_state$total_score
+fit <- lars(x, y, type='lasso', normalize=TRUE)
 
+thresh <- 30
+par(mar = c(6,4,4,2))
+coef_ <- coef(fit)[thresh, (coef(fit)[thresh,]>0)|(coef(fit)[thresh,]<0)]
+names <- colnames(x)[(coef(fit)[thresh,]>0)|(coef(fit)[thresh,]<0)]
+n <- 1:length(coef_)
+barplot(coef_, names.arg = n, col = 'blue',
+        ylab = 'Coefficient Magnitude',
+        xlab = 'Predictor',
+        main = 'Plot of Coefficients from Lasso Regression on all\nmain predictors and their two way interaction terms')
+i = 1
+n = rep(NA, length(names))
+for( name in names){
+  if (i < 10){
+    n [i] <- (paste(i,':  ', name))
+  }else{
+    n [i] <- (paste(i,': ', name))
+  }
+  i <- i + 1
+}
+legend(4, -30,
+       text.width = 8,
+       n, pch=0, col='blue',
+       fill='blue',
+       cex=1,
+      text.font = 1.1)
 
-
+plot(fit)
 
 
 
