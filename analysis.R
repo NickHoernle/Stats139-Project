@@ -109,6 +109,7 @@ summary(model1)
 plot(model1)
 
 model2 <- lm(total_score ~ employee_salaries
+                            +per_pupil_expenditure
                             +total_support_services
                             +poverty_18_and_younger
                             +asian.hawaiian.Native.Pacific.Islander.or.asian
@@ -122,18 +123,15 @@ plot(model2)
 #WIsc has more impact than other states. barely outside red line 
 
 #interaction model
-model3 <- lm(total_score ~ (poverty_18_and_younger
-             +FTE_teachers
-             +american.indian.alaskan
-             +asian.hawaiian.Native.Pacific.Islander.or.asian
-             +black
-             +student.support.services)^2, data=df_without_state)
+model3 <- lm(total_score ~ (employee_salaries + per_pupil_expenditure + total_support_services + 
+                              poverty_18_and_younger + asian.hawaiian.Native.Pacific.Islander.or.asian + 
+                              total_support_service)^2, data=df_without_state)
 summary(model3)
 plot(model3)
 #WE PICKED THE ONES THAT WERE MOST IMPORTANT, 
 
 #Model from 
-model5 <- lm(total_score ~ (people_per_household*
+model4 <- lm(total_score ~ (people_per_household*
                             per_pupil_expenditure*
                               FTE_teachers+
                               gini_coef*
@@ -141,14 +139,15 @@ model5 <- lm(total_score ~ (people_per_household*
                               poverty_18_and_younger*
                               total_support_service),
              data=df_without_state)
-summary(model5)
+summary(model4)
 
-plot(model5)
+plot(model4)
 
 #AIC BIC below
 #model 1 ((total model))
 base <- lm(total_score~1, data = df_without_state)
 AICmodel1<-step(model1, scope=list(lower=base), direction='backward')
+plot(AICmodel1)
 #################   AIC=209.72    #################
 #white, hisp, total # students, student support services, 
 ## Per pupil exp, am indian, black, employee salary, asian, people per house, 
@@ -158,7 +157,7 @@ AICmodel1<-step(model1, scope=list(lower=base), direction='backward')
 
 AICmodel2<-step(base,list(lower = base, upper = model),direction='both')
 #also 209.72
-AICmodel2<-step(base, scope=list(upper=model1),direction='forward')
+AICmodel3<-step(base, scope=list(upper=model1),direction='forward')
 #220- worse
 ###########################################################
 
