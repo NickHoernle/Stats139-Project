@@ -104,16 +104,15 @@ plot(fit)
 ######################################################################
 
 
-model <- lm(total_score ~ ., data=df_without_state)
-summary(model)
-plot(model)
+model1 <- lm(total_score ~ ., data=df_without_state)
+summary(model1)
+plot(model1)
 
-model2 <- lm(total_score ~ poverty_18_and_younger
-                            +FTE_teachers
-                            +american.indian.alaskan
+model2 <- lm(total_score ~ employee_salaries
+                            +total_support_services
+                            +poverty_18_and_younger
                             +asian.hawaiian.Native.Pacific.Islander.or.asian
-                            +black
-                            +student.support.services, data=df_without_state)
+                            +total_support_service, data=df_without_state)
 summary(model2)
 plot(model2)
 ## Wisconsin has a big nfluence on cooks model. This obs is far from avr of covariates. 
@@ -148,7 +147,8 @@ plot(model5)
 
 #AIC BIC below
 #model 1 ((total model))
-AICmodel1<-step(model,df_without_state,direction='backward')
+base <- lm(total_score~1, data = df_without_state)
+AICmodel1<-step(model1, scope=list(lower=base), direction='backward')
 #################   AIC=209.72    #################
 #white, hisp, total # students, student support services, 
 ## Per pupil exp, am indian, black, employee salary, asian, people per house, 
@@ -156,9 +156,9 @@ AICmodel1<-step(model,df_without_state,direction='backward')
 
 ##NOT INCLUDED median income
 
-AICmodel2<-step(model,df_without_state,direction='both')
+AICmodel2<-step(base,list(lower = base, upper = model),direction='both')
 #also 209.72
-AICmodel2<-step(model,df_without_state,direction='forward')
+AICmodel2<-step(base, scope=list(upper=model1),direction='forward')
 #220- worse
 ###########################################################
 
