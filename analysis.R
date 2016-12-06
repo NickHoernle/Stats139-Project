@@ -24,48 +24,48 @@ totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 df_without_state <- totalclean[,-1]
 
 #transform (decided no sqrt)
-hist(clean_data$per_pupil_expenditure)
-hist(log((clean_data$per_pupil_expenditure)))
-clean_data$per_pupil_expenditure <- log((clean_data$per_pupil_expenditure))
+hist(df_without_state$per_pupil_expenditure)
+hist(log((df_without_state$per_pupil_expenditure)))
+df_without_state$per_pupil_expenditure <- log((df_without_state$per_pupil_expenditure))
 
-#transform
-hist(clean_data$employee_salaries)
-hist(log(clean_data$employee_salaries))
-clean_data$employee_salaries <- log(clean_data$employee_salaries)
-#transform
-hist(clean_data$total_support_services)
-hist(log(clean_data$total_support_services))
-clean_data$total_support_service <- log(clean_data$total_support_services)
+#transform #PRETTY XTREME 
+hist(df_without_state$employee_salaries)
+hist(log(df_without_state$employee_salaries))
+df_without_state$employee_salaries <- log(df_without_state$employee_salaries)
+
+#transform #MAYBE MORE XTREME
+hist(df_without_state$total_support_services,  main = "Total Support Services Histogram", col= "light blue", xlab="Total Support Servies", ylab="Frequency")
+hist(log(df_without_state$total_support_services),  main = "Logarithm Transformation of Total Support Services Histogram", col= "light green", xlab="Log Total Support Servies", ylab="Frequency")
+df_without_state$total_support_service <- log(df_without_state$total_support_services)
+
 
 #tranny
-hist(clean_data$people_per_household)
-hist(log(clean_data$people_per_household))
-clean_data$gini_coef <- hist(log(clean_data$people_per_household))
+hist(df_without_state$people_per_household)
+hist(log(df_without_state$people_per_household))
+df_without_state$people_per_household <- hist(log(df_without_state$people_per_household))
 #tranny
-hist(clean_data$gini_coef)
-hist(log(clean_data$gini_coef))
-clean_data$gini_coef <- log(clean_data$gini_coef)
+hist(df_without_state$gini_coef)
+hist(log(df_without_state$gini_coef))
+df_without_state$gini_coef <- log(df_without_state$gini_coef)
 
 
-hist(clean_data$poverty_18_and_younger)
-hist(sqrt(clean_data$poverty_18_and_younger))
-clean_data$poverty_18_and_younger <- sqrt(clean_data$poverty_18_and_younger)
+hist(df_without_state$poverty_18_and_younger)
+hist(sqrt(df_without_state$poverty_18_and_younger))
+df_without_state$poverty_18_and_younger <- sqrt(df_without_state$poverty_18_and_younger)
 
-hist(clean_data$FTE_teachers)
-hist(log(clean_data$FTE_teachers))
-clean_data$FTE_teachers<- log(clean_data$FTE_teachers)
+hist(df_without_state$FTE_teachers)
+hist(log(df_without_state$FTE_teachers))
+df_without_state$FTE_teachers<- log(df_without_state$FTE_teachers)
 
 #DROP MEDIAN INCOME
-hist(clean_data$median_income)
-
-
-
+hist(df_without_state$median_income)
 
 
 
 
 model <- lm(total_score ~ ., data=df_without_state)
 summary(model)
+plot(model)
 
 model2 <- lm(total_score ~ poverty_18_and_younger
                             +FTE_teachers
@@ -74,6 +74,12 @@ model2 <- lm(total_score ~ poverty_18_and_younger
                             +black
                             +student.support.services, data=totalclean)
 summary(model2)
+plot(model2)
+## Wisconsin has a big nfluence on cooks model. This obs is far from avr of covariates. 
+#one covariate for this state is far from avr- why it 
+#this obs has a 
+#cooks dis: if x is far, and move y, huge change on slope. Not bad- just worth looking at
+#WIsc has more impact than other states. barely outside red line 
 
 #interaction model
 model3 <- lm(total_score ~ (poverty_18_and_younger
@@ -83,6 +89,8 @@ model3 <- lm(total_score ~ (poverty_18_and_younger
              +black
              +student.support.services)^2, data=totalclean)
 summary(model3)
+plot(model3)
+#WE PICKED THE ONES THAT WERE MOST IMPORTANT, 
 
 
 #AIC BIC below
@@ -123,10 +131,34 @@ BICmodel1<-step(model,df_without_state,direction='backward',k=log(nrow(df_withou
 #220.84
 
 
+#### MODEL 2
 
 
+#AIC BIC below
+AICmodel2.1<-step(model2,df_without_state,direction='backward')
+#################   AIC=216    #################
+#white, hisp, total # students, student support services, 
+## Per pupil exp, am indian, black, employee salary, asian, people per house, 
+#poverty 18
+
+##NOT INCLUDED median income
+
+AICmodel2.2<-step(model2,df_without_state,direction='both')
+#216
+AICmodel2.3<-step(model2,df_without_state,direction='forward')
+#217
+###########################################################
 
 
+##Model 3
+
+#AIC  below
+AICmodel3.1<-step(model3,df_without_state,direction='backward')
+#AIC=214 
+AICmodel3.2<-step(model3,df_without_state,direction='both')
+#214
+AICmodel3.3<-step(model3,df_without_state,direction='forward')
+#228
 
 
 
