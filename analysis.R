@@ -24,39 +24,42 @@ totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 df_without_state <- totalclean[,-1]
 
 #transform (decided no sqrt)
-hist(clean_data$per_pupil_expenditure)
-hist(log((clean_data$per_pupil_expenditure)))
-clean_data$per_pupil_expenditure <- log((clean_data$per_pupil_expenditure))
+hist(df_without_state$per_pupil_expenditure)
+hist(log((df_without_state$per_pupil_expenditure)))
+df_without_state$per_pupil_expenditure <- log((df_without_state$per_pupil_expenditure))
 
 #transform
-hist(clean_data$employee_salaries)
-hist(log(clean_data$employee_salaries))
-clean_data$employee_salaries <- log(clean_data$employee_salaries)
+hist(df_without_state$employee_salaries)
+hist(log(df_without_state$employee_salaries))
+df_without_state$employee_salaries <- log(df_without_state$employee_salaries)
 #transform
-hist(clean_data$total_support_services)
-hist(log(clean_data$total_support_services))
-clean_data$total_support_service <- log(clean_data$total_support_services)
+hist(df_without_state$total_support_services)
+hist(log(df_without_state$total_support_services))
+df_without_state$total_support_service <- log(df_without_state$total_support_services)
 
 #tranny
-hist(clean_data$people_per_household)
-hist(log(clean_data$people_per_household))
-clean_data$gini_coef <- hist(log(clean_data$people_per_household))
+hist(df_without_state$people_per_household)
+hist(log(df_without_state$people_per_household))
+df_without_state$gini_coef <- (log(df_without_state$people_per_household))
 #tranny
-hist(clean_data$gini_coef)
-hist(log(clean_data$gini_coef))
-clean_data$gini_coef <- log(clean_data$gini_coef)
+hist(df_without_state$gini_coef)
+hist(log(df_without_state$gini_coef))
+df_without_state$gini_coef <- log(df_without_state$gini_coef)
 
 
-hist(clean_data$poverty_18_and_younger)
-hist(sqrt(clean_data$poverty_18_and_younger))
-clean_data$poverty_18_and_younger <- sqrt(clean_data$poverty_18_and_younger)
+hist(df_without_state$poverty_18_and_younger)
+hist(sqrt(df_without_state$poverty_18_and_younger))
+df_without_state$poverty_18_and_younger <- sqrt(df_without_state$poverty_18_and_younger)
 
-hist(clean_data$FTE_teachers)
-hist(log(clean_data$FTE_teachers))
-clean_data$FTE_teachers<- log(clean_data$FTE_teachers)
+hist(df_without_state$FTE_teachers)
+hist(log(df_without_state$FTE_teachers))
+df_without_state$FTE_teachers<- log(df_without_state$FTE_teachers)
 
 #DROP MEDIAN INCOME
-hist(clean_data$median_income)
+hist(df_without_state$median_income)
+
+df_without_state <- df_without_state[,-7] # drop mean income
+#clean_data <- clean_data[,-1] # drop state
 
 model <- lm(total_score ~ ., data=df_without_state)
 summary(model)
@@ -66,7 +69,7 @@ model2 <- lm(total_score ~ poverty_18_and_younger
                             +american.indian.alaskan
                             +asian.hawaiian.Native.Pacific.Islander.or.asian
                             +black
-                            +student.support.services, data=totalclean)
+                            +student.support.services, data=df_without_state)
 summary(model2)
 
 #interaction model
@@ -75,9 +78,21 @@ model3 <- lm(total_score ~ (poverty_18_and_younger
              +american.indian.alaskan
              +asian.hawaiian.Native.Pacific.Islander.or.asian
              +black
-             +student.support.services)^2, data=totalclean)
+             +student.support.services)^2, data=df_without_state)
 summary(model3)
 
+#Model from 
+model5 <- lm(total_score ~ (people_per_household*
+                            per_pupil_expenditure*
+                              FTE_teachers+
+                              gini_coef*
+                              voucher+
+                              poverty_18_and_younger*
+                              total_support_service),
+             data=df_without_state)
+summary(model5)
+
+plot(model5)
 
 #AIC BIC below
 #model 1 ((total model))
@@ -117,12 +132,14 @@ BICmodel1<-step(model,df_without_state,direction='backward',k=log(nrow(df_withou
 #220.84
 
 library(lars)
+model3 <- lm(total_score ~ .^2, data = df_without_state)
 x <- model.matrix(model3)
 y <- df_without_state$total_score
 fit <- lars(x, y, type='lasso', normalize=TRUE)
 
-thresh <- 30
-par(mar = c(6,4,4,2))
+thresh <-20
+par(mar = c(20,4,4,2))
+par(xpd=TRUE)
 coef_ <- coef(fit)[thresh, (coef(fit)[thresh,]>0)|(coef(fit)[thresh,]<0)]
 names <- colnames(x)[(coef(fit)[thresh,]>0)|(coef(fit)[thresh,]<0)]
 n <- 1:length(coef_)
@@ -134,18 +151,21 @@ i = 1
 n = rep(NA, length(names))
 for( name in names){
   if (i < 10){
-    n [i] <- (paste(i,':  ', name))
+    n [i] <- (paste(i,':  ', name,'\n'))
   }else{
-    n [i] <- (paste(i,': ', name))
+    n [i] <- (paste(i,': ', name,'\n'))
   }
   i <- i + 1
 }
-legend(4, -30,
-       text.width = 8,
-       n, pch=0, col='blue',
+legend(1, 
+       -23,
+       n, 
+       pch=0, 
+       col='blue',
        fill='blue',
        cex=1,
-      text.font = 1.1)
+       text.width=15,
+       text.font = 0.9)
 
 plot(fit)
 
