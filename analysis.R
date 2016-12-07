@@ -22,6 +22,7 @@ totalclean <- merge(totalclean, demographics[,demo_cols], by.x='State', by.y='st
 totalclean<-totalclean[!(totalclean$State=="District of Columbia"), ]
 
 df_without_state <- totalclean[,-1]
+df_without_state$voucher <- as.factor(df_without_state$voucher)
 
 #transform (decided no sqrt)
 hist(df_without_state$per_pupil_expenditure)
@@ -148,6 +149,13 @@ plot(model4)
 base <- lm(total_score~1, data = df_without_state)
 AICmodel1<-step(model1, scope=list(lower=base), direction='backward')
 plot(AICmodel1)
+
+AICmodel1<-step(model1, scope=list(lower=base), direction='backward')
+AICmodel2<-step(model2, scope=list(lower=base), direction='backward')
+AICmodel3 <- step(model3, scope=list(lower=base), direction='backward')
+AICmodel4 <- step(model4, scope=list(lower=base), direction='backward')
+
+
 #################   AIC=209.72    #################
 #white, hisp, total # students, student support services, 
 ## Per pupil exp, am indian, black, employee salary, asian, people per house, 
