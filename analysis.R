@@ -101,6 +101,7 @@ legend(1,
        text.font = 0.9)
 
 plot(fit)
+par(mar = c(6,4,4,2))
 #Lasso
 ######################################################################
 
@@ -154,6 +155,26 @@ AICmodel1<-step(model1, scope=list(lower=base), direction='backward')
 AICmodel2<-step(model2, scope=list(lower=base), direction='backward')
 AICmodel3 <- step(model3, scope=list(lower=base), direction='backward')
 AICmodel4 <- step(model4, scope=list(lower=base), direction='backward')
+
+sum1 <- summary(AICmodel1)
+sum2 <- summary(AICmodel2)
+sum3 <- summary(AICmodel3)
+sum4 <- summary(AICmodel4)
+
+terms1 <- sum1$terms
+terms2 <- sum2$terms
+terms3 <- sum3$terms
+terms4 <- sum4$terms
+
+terms1 <- sum1$coefficients[,2]
+terms2 <- sum2$coefficients[,2]
+terms3 <- sum3$coefficients[,2]
+terms4 <- sum4$coefficients[,2]
+
+std_err1 <- sum1$coefficients[,3]
+std_err2 <- sum2$coefficients[,3]
+std_err3 <- sum3$coefficients[,3]
+std_err4 <- sum4$coefficients[,3]
 
 
 #################   AIC=209.72    #################
